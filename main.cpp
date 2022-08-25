@@ -1,7 +1,52 @@
-#include"graph.h"
-#include<iostream>
-#include"vertex.h"
-#include"my_priority_queue.h"
+#include"main.h"
+//-----------------------------------------------------------------------------------------------------------------------------
+int main()
+{
+	float vertexs, edges, s, t;
+	try {
+		std::cin >> vertexs >> edges >> s >> t;
+		if (vertexs < 2 || vertexs != floor(vertexs) || edges < 0 || edges != floor(edges) || s < 1 || s > vertexs || s != floor(s) || t < 1 || t > vertexs || t != floor(t))
+			throw(0);
+		graph G1(vertexs), GF1(vertexs), G2(vertexs), GF2(vertexs);
+
+		for (int i = 0; i < edges; ++i)
+		{
+			float v, u, c;
+			std::cin >> v >> u >> c;
+			if (v < 1 || v > vertexs || v != floor(v) || u < 1 || u > vertexs || u != floor(u) || c < 0 || c != floor(c))
+				throw(0);
+			G1.AddEdge(v, u, c);
+		}
+
+
+		GF1 = G1;
+		G2 = G1;
+		GF2 = G1;
+
+
+		std::cout << "BFS Method:\n";
+		printOutPut(G1, GF1, s, t, vertexs, true);
+		std::cout << "Greedy Method:\n";
+		printOutPut(G2, GF2, s, t, vertexs, false);
+
+		std::cout << "\n\n";
+		G1.print();
+		std::cout << "\n\n";
+		GF1.print();
+
+		std::cout << "\n\n\n";
+		G2.print();
+		std::cout << "\n\n";
+		GF2.print();
+
+	}
+	catch (...)
+	{
+		std::cout << "invalid input";
+		return 0;
+	}
+	return 0;
+}
 //-----------------------------------------------------------------------------------------------------------------------------
 void bfs(int s, graph& gr, int n, std::vector<float>& d, std::vector<int>& p)
 {
@@ -208,54 +253,6 @@ void printOutPut(graph& G, graph& GF, int s, int t, int vertexs, bool flage)
 		}
 	if (temp != -1)
 		std::cout << temp << std::endl;
-}
-//-----------------------------------------------------------------------------------------------------------------------------
-int main()
-{
-	float vertexs, edges, s, t;
-	try {
-		std::cin >> vertexs >> edges >> s >> t;
-		if (vertexs < 2 || vertexs != floor(vertexs) || edges < 0 || edges != floor(edges) || s < 1 || s > vertexs || s != floor(s) || t < 1 || t > vertexs || t != floor(t))
-			throw(0);
-		graph G1(vertexs), GF1(vertexs), G2(vertexs), GF2(vertexs);
-
-		for (int i = 0; i < edges; ++i)
-		{
-			float v, u, c;
-			std::cin >> v >> u >> c;
-			if (v < 1 || v > vertexs || v != floor(v) || u < 1 || u > vertexs || u != floor(u) || c < 0 || c != floor(c))
-				throw(0);
-			G1.AddEdge(v, u, c);
-		}
-
-
-		GF1 = G1;
-		G2 = G1;
-		GF2 = G1;
-
-		
-		std::cout << "BFS Method:\n";
-		printOutPut(G1, GF1, s, t, vertexs, true);
-		std::cout << "Greedy Method:\n";
-		printOutPut(G2, GF2, s, t, vertexs, false);
-
-		std::cout << "\n\n";
-		G1.print();
-		std::cout << "\n\n";
-		GF1.print();
-
-		std::cout << "\n\n\n";
-		G2.print();
-		std::cout << "\n\n";
-		GF2.print();
-
-	}
-	catch (...)
-	{
-		std::cout << "invalid input";
-		return 0;
-	}
-	return 0;
 }
 //-----------------------------------------------------------------------------------------------------------------------------
 

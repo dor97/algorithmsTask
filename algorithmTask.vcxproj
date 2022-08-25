@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="edge.h" />
     <ClInclude Include="graph.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="my_priority_queue.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
