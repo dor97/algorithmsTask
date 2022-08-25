@@ -1,10 +1,8 @@
 #include"graph.h"
 #include<iostream>
-#include<queue>
 #include"vertex.h"
 #include"my_priority_queue.h"
-
-
+//-----------------------------------------------------------------------------------------------------------------------------
 void bfs(int s, graph& gr, int n, std::vector<float>& d, std::vector<int>& p)
 {
 	std::queue<int> q;
@@ -30,14 +28,15 @@ void bfs(int s, graph& gr, int n, std::vector<float>& d, std::vector<int>& p)
 			q.pop();
 	}
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
 float min(float d, int c)
 {
 	if (d > c)
 		return c;
 	return d;
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//The function find the path with the max flow that can be add
 void Greedy_Method(int s, graph& gr, int n, std::vector<float>& d, std::vector<int>& p)
 {
 	my_priority_queue q(n);
@@ -51,7 +50,7 @@ void Greedy_Method(int s, graph& gr, int n, std::vector<float>& d, std::vector<i
 		p.push_back(-1);
 	}
 
-	q.updet();
+	q.update();
 
 	d[s - 1] = std::numeric_limits<float>::infinity();
 
@@ -69,7 +68,8 @@ void Greedy_Method(int s, graph& gr, int n, std::vector<float>& d, std::vector<i
 		q.pop();
 	}
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//The function return the min flow in a path from s to t
 int findMin(graph& GF, std::vector<int>& p, int t)
 {
 	int min = -1;
@@ -90,7 +90,8 @@ int findMin(graph& GF, std::vector<int>& p, int t)
 	}
 	return min;
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//The function updates the capacity in the graph after adding flow(to the GF graph)
 void updateCapacity(graph& GF, std::vector<int>& p, int t, int update)
 {
 	int i = t;
@@ -120,7 +121,8 @@ void updateCapacity(graph& GF, std::vector<int>& p, int t, int update)
 		i = p[i - 1];
 	}
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//The function update the flow in the graph, adding a flow in a path from s to t
 void updateFlow(graph& G, std::vector<int>& p, int t, int update)
 {
 	int i = t;
@@ -148,20 +150,20 @@ void updateFlow(graph& G, std::vector<int>& p, int t, int update)
 		i = p[i - 1];
 	}
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
+//The function update a path from s to t, adding to it the max amount of flow that can be add
 void updatePath(graph& GF, graph& G, std::vector<int>& p, int t)
 {
 	int min = findMin(GF, p, t);
 	updateCapacity(GF, p, t, min);
 	updateFlow(G, p, t, min);
 }
-
-
+//-----------------------------------------------------------------------------------------------------------------------------
 void fordfulkerson(graph& G, graph& GF, int t, int s, int n, bool flage)
 {
 	std::vector<int> p;
 	std::vector<float> d;
-	if(flage)
+	if(flage)	//ones run the algorithm with bfs and ones with the greedy method 
 		bfs(s, GF, n, d, p);
 	else
 		Greedy_Method(s, GF, n, d, p);
@@ -170,34 +172,35 @@ void fordfulkerson(graph& G, graph& GF, int t, int s, int n, bool flage)
 		updatePath(GF, G, p, t);
 		p.clear();
 		d.clear();
-		if (flage)
+		if (flage)	//ones run the algorithm with bfs and ones with the greedy method
 			bfs(s, GF, n, d, p);
 		else
 			Greedy_Method(s, GF, n, d, p);
 	}
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
 void printOutPut(graph& G, graph& GF, int s, int t, int vertexs, bool flage)
 {
 	fordfulkerson(G, GF, t, s, vertexs, flage);
 	int flow = 0;
-	for (auto v : G.GetAdjList(1))
-		flow += v.getFlow();
+	for (auto v : G.GetAdjList(s))
+		flow += v.getFlow();	//sum flow in edges going out from s
 	std::cout << "Max flow: " << flow << std::endl;
 
 	std::vector<float> d;
 	std::vector<int> p;
 
 	bfs(s, GF, vertexs, d, p);
-	std::cout << "Min cut : S = " << 1;
-	for (int i = 0; i < p.size(); ++i)
+	std::cout << "Min cut : S = " << s;	//print accessible to s in GF
+	for (int i = 0; i < p.size(); ++i)	
 		if (p[i] != -1)
 			std::cout << ", " << i + 1;
 	std::cout << ".";
+
 	std::cout << " T = ";
 	int temp = -1;
-	for (int i = 0; i < p.size(); ++i)
-		if (p[i] == -1 && i != 0)
+	for (int i = 0; i < p.size(); ++i)	//print not accessible to s in GF
+		if (p[i] == -1 && i != (s - 1))
 		{
 			if (temp != -1)
 				std::cout << temp << ", ";
@@ -206,7 +209,7 @@ void printOutPut(graph& G, graph& GF, int s, int t, int vertexs, bool flage)
 	if (temp != -1)
 		std::cout << temp << std::endl;
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
 int main()
 {
 	float vertexs, edges, s, t;
@@ -241,6 +244,11 @@ int main()
 		std::cout << "\n\n";
 		GF1.print();
 
+		std::cout << "\n\n\n";
+		G2.print();
+		std::cout << "\n\n";
+		GF2.print();
+
 	}
 	catch (...)
 	{
@@ -249,17 +257,17 @@ int main()
 	}
 	return 0;
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------
 
 /*
-gr.AddEdge(1, 2, 16);
-gr.AddEdge(1, 3, 13);
-gr.AddEdge(2, 3, 10);
-gr.AddEdge(3, 2, 4);
-gr.AddEdge(2, 4, 12);
-gr.AddEdge(4, 3, 9);
-gr.AddEdge(3, 5, 14);
-gr.AddEdge(5, 4, 7);
-gr.AddEdge(4, 6, 20);
-gr.AddEdge(5, 6, 4);
+G.AddEdge(1, 2, 16);
+G.AddEdge(1, 3, 13);
+G.AddEdge(2, 3, 10);
+G.AddEdge(3, 2, 4);
+G.AddEdge(2, 4, 12);
+G.AddEdge(4, 3, 9);
+G.AddEdge(3, 5, 14);
+G.AddEdge(5, 4, 7);
+G.AddEdge(4, 6, 20);
+G.AddEdge(5, 6, 4);
 */

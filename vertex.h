@@ -1,10 +1,9 @@
 #pragma once
-
-
+//-----------------------------------------------------------------------------------------------------------------------------
 class vertex {
 
-	int v;
-	float c;
+	int v;		//vertex
+	float c;	//the max flow that can go through the vertex out of all the path from s to it
 public:
 	vertex() : v(0), c(0) { }
 	vertex(int v, float c) : v(v), c(c) {}
@@ -15,3 +14,4 @@ public:
 	void setC(float c) {this->c = c; }
 
 };
+//-----------------------------------------------------------------------------------------------------------------------------
