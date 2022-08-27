@@ -7,7 +7,7 @@
 class my_priority_queue : public std::priority_queue<vertex>
 {
 	std::vector<int> indexes;
-	int size;
+	int size = 0;
 
 public:
 	my_priority_queue(int n) { indexes.resize(n); }
